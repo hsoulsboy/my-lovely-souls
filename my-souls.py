@@ -28,7 +28,7 @@ def main():
             discount=True
 
         my_souls_data[my_soul[1]] = {
-            'price': discount_original_price.group(1) if discount else price.group(1) + " " + price_currency.group(1),
+            'price': discount_original_price.group(1) + " " + price_currency.group(1) if discount else price.group(1) + " " + price_currency.group(1),
             'discount': {
                 'discountPrice': discount_final_price.group(1) + " " + price_currency.group(1),
                 'discountPercentage': discount_pct.group(1),
