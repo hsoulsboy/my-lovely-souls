@@ -4,19 +4,25 @@ import sys
 import os
 import csv
 
-def main():
+def get_discount(csv_file, game_name):
+    """Get discount data of a game
 
-    # Check Arguments
-    if len(sys.argv[1:]) != 2:
-        print("""Usage:
-        $ python3 check_discount.py <CSV_FILE> '<GAME_NAME>'""")
+    Parameters
+    ----------
+    csv_file : File
+        CSV file containing Steam games Id and Name
 
-        sys.exit(0)
+    game_name : String
+        Name of the game to be searched
 
-    csv_file, game_name = sys.argv[1:]
+    Returns
+    -------
+    Dict
+        Dictionary containing discount information based on the games that were found
+    """
 
     # Check CSV File
-    if not os.path.isfile(csv_file) or not csv_file[-4:].lower() != ".csv":
+    if not os.path.isfile(csv_file) or csv_file[-4:].lower() != ".csv":
         print("A CSV file must be provided")
         sys.exit(0)
 
@@ -39,14 +45,15 @@ def main():
             price_currency = re.search(f'"priceCurrency" content="([a-zA-Z0-9,]+)"', resp.text)
             price = re.search(f'"price" content="([a-zA-Z0-9,]+)"', resp.text)
 
+            if price_currency is None or price is None:
+                print("No game was found by the name of: '{}'")
+                sys.exit(0)
+
             # Discount data
             discount_countdown = re.search(f'discount_countdown">([a-zA-Z !áé0-9]+)', resp.text)
             discount_pct = re.search(f'discount_pct">([a-zA-Z \-%!áé0-9]+)', resp.text)
             discount_final_price = re.search(f'discount_final_price">([a-zA-Z \-%$,!áé0-9]+)', resp.text)
             discount_original_price = re.search(f'discount_original_price">([a-zA-Z \-%$,!áé0-9]+)', resp.text)
-
-            if price_currency is None or price is None:
-                print("No game was found by the name of: '{}'")
 
             if not discount_countdown is None and not discount_pct is None and not discount_original_price is None:
                 discount=True
@@ -60,7 +67,4 @@ def main():
                 } if discount else "No current discount"
             }
     
-    print(game_data)
-
-if __name__ == "__main__":
-    main()
+    return game_data
