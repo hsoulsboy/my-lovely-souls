@@ -30,7 +30,7 @@ def create(output_file, filter_preferences=False, filter_language=False):
     preferences, language = (1, 1)
     if filter_preferences is True:
         preferences = 0
-    elif filter_language is True:
+    if filter_language is True:
         language = 0
 
     base_url = "https://store.steampowered.com/search?ignore_preferences={}&ndl={}&page={}"
