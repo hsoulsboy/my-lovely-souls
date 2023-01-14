@@ -44,8 +44,6 @@ def create(output_file, filter_preferences=False, filter_language=False):
             if int(resp_game.group(1)) > 3:
                         page_count = resp_game.group(1)
 
-    print(page_count)
-
     steam_links = {}
     while page <= int(page_count):
         resp = requests.get(base_url.format(preferences, language, page))
